@@ -15,10 +15,9 @@ app.use(cors({
       const allowedOrigins = [
     "http://localhost:5173",
    'https://cedar-clinic.onrender.com/',
-  'https://www.cedarclinic.co.ke',
   'https://cedarclinic.co.ke'
     ];
-      if (!origin || allowedOrigins.includes(origin) !== -1) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
