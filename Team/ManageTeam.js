@@ -1,13 +1,15 @@
 const Team = require('../Models/Team');
 const CreateMember = async (data) => {
     try {
-        const fullname = data.fullname;
-        const position = data.position;
+        const name = data.name;
         const image = data.image;
+        const title = data.title;
+        const description = data.description;   
         const newMember = await Team.create({
-            fullname,
-            position,
-            image
+            name,
+            image,
+            title,
+            description
         });
         return newMember;
     } catch (error) {
@@ -24,6 +26,14 @@ const UpdateMember = async (id, data) => {
             where: { id }
         });
         return updatedMember;
+    } catch (error) {
+        throw error;
+    }
+};
+const GetMembers = async () => {
+    try {
+        const members = await Team.findAll();
+        return members;
     } catch (error) {
         throw error;
     }
@@ -45,5 +55,6 @@ const DeleteMember = async (id) => {
 module.exports = {
     CreateMember,
     UpdateMember,
-    DeleteMember
+    DeleteMember,
+    GetMembers
 };

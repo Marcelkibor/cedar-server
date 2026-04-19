@@ -1,35 +1,13 @@
 const Insurance  = require('../Models/Insurance');
-
 const CreateInsurance = async (data) => {
     try {
         const name = data.name;
-        const description = data.description;
         const image = data.image;
         const newInsurance = await Insurance.create({
             name,
-            description,
             image
         });
         return newInsurance;
-    } catch (error) {
-        throw error;
-    }
-};
-
-const UpdateInsurance = async (id, data) => {
-    try {
-        const insuranceToUpdate = await Insurance.findById(id);
-        if (!insuranceToUpdate) {
-            throw new Error('Insurance not found');
-        }
-        const updatedInsurance = await Insurance.update({
-            name: data.name,
-            description: data.description,
-            image: data.image
-        } , {
-            where: { id }
-        });
-        return updatedInsurance;
     } catch (error) {
         throw error;
     }
@@ -49,9 +27,17 @@ const DeleteInsurance = async (id) => {
         throw error;
     }
 };
+const GetInsurances = async () => {
+    try {
+        const insurances = await Insurance.findAll();
+        return insurances;
+    } catch (error) {
+        throw error;
+    }
+};
 
 module.exports = {
     CreateInsurance,
-    UpdateInsurance,
-    DeleteInsurance
+    DeleteInsurance,
+    GetInsurances
 };
