@@ -18,12 +18,13 @@ app.use(cors({
   'https://www.cedarclinic.co.ke',
   'https://cedarclinic.co.ke'
     ];
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      if (!origin || allowedOrigins.includes(origin) !== -1) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
       }
     },
+    credentials: true,
   }));
 app.listen(port,()=>{
     console.log(`server running on port ${port}`);
