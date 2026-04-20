@@ -9,14 +9,10 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
   },
   dialectOptions: {
     ssl: {
+      require: true,
       rejectUnauthorized: false
     }
   }
 });
-
-
-sequelize.sync({ force: true })
-  .then(() => console.log('DB synced successfully.'))
-  .catch(err => console.error('DB sync error:', err));
 
 module.exports = sequelize;
