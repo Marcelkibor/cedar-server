@@ -9,6 +9,7 @@ router.post("/add-service", async (req, res) => {
 });
 router.get("/get-services", async (req, res) => {
   let result = await GetServices();
+  console.log('services', result);
   res.json(result);
 });
 router.post("/add-member", async (req, res) => {
