@@ -14,8 +14,8 @@ app.use(cors({
     origin: function (origin, callback) {
       const allowedOrigins = [
     "http://localhost:5173",
-   'https://cedar-clinic.onrender.com/',
-  'https://cedarclinic.co.ke'
+  'https://cedarclinic.co.ke',
+    'https://www.cedarclinic.co.ke',
     ];
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
