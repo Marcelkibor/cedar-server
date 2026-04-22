@@ -1,27 +1,25 @@
 const Insurance  = require('../Models/Insurance');
-const CreateInsurance = async (data) => {
-    try {
-        const name = data.name;
-        const image = data.image;
-        const newInsurance = await Insurance.create({
-            name,
-            image
-        });
-        return newInsurance;
-    } catch (error) {
-        throw error;
-    }
-};
+const CreateInsurance = async ({ name, file }) => {
+  try {
+    const image = file ? file.path : null;
 
+    const newInsurance = await Insurance.create({
+      name,
+      image,
+    });
+
+    return newInsurance;
+  } catch (error) {
+    throw error;
+  }
+};
 const DeleteInsurance = async (id) => {
     try {
-        const insuranceToDelete = await Insurance.findById(id);
+        const insuranceToDelete = await Insurance.findByPk(id);
         if (!insuranceToDelete) {
             throw new Error('Insurance not found');
         }
-        await Insurance.destroy({
-            where: { id }
-        });
+        await insuranceToDelete.destroy();
         return { message: 'Insurance deleted successfully' };
     } catch (error) {
         throw error;

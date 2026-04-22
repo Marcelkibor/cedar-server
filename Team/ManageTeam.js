@@ -40,10 +40,12 @@ const GetMembers = async () => {
 };
 const DeleteMember = async (id) => {
     try {
-        const member = await Team.findById(id);
+        const member = await Team.findByPk(id);
         if (!member) {
+            console.error('Member not found');
             throw new Error('Member not found');
         }
+        console.log('Deleting member with id:', id);
         await Team.destroy({
             where: { id }
         });

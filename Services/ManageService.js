@@ -5,7 +5,6 @@ const CreateService = async (data) => {
     try {
         const name = data.name;
         const description = data.description;
-        console.log(name, description);
         let res = await service.create({
             name,
             description

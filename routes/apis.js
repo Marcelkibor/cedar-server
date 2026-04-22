@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const { CreateService,GetServices, DeleteService} = require("../Services/ManageService");
-const { CreateMember, GetMembers} = require("../Team/ManageTeam");
+const { CreateMember, GetMembers, DeleteMember} = require("../Team/ManageTeam");
 const {CreateInsurance, DeleteInsurance, GetInsurances} = require("../Insurance/ManageInsurance");
-
+const {upload} = require("../middleware/upload");
 router.post("/add-service", async (req, res) => {
 try {
   let result = await CreateService(req.body);
-  res.json(result);
+  res.json(result.status);
 } catch (error) {
   console.error('Error creating service:', error);
   res.status(500).json({ message: 'Internal server error', status: 500 });
@@ -28,8 +28,13 @@ router.post("/delete-service", async (req, res) => {
 });
 
 router.post("/add-member", async (req, res) => {
-  let result  = await CreateMember(req.body);
-  res.json(result);
+  let result = await CreateMember(req.body);
+  if(result){
+    res.json({ message: 'Member added successfully', status: 200 });
+  }
+  else{
+    res.json({ message: 'Failed to add member', status: 500 });
+  }
 });
 
 router.get("/get-members", async (req, res) => {
@@ -37,17 +42,50 @@ router.get("/get-members", async (req, res) => {
   res.json(result);
 });
 
-router.post("/add-insurance", async (req, res) => {
-  let result = await CreateInsurance(req.body);
-  res.json(result);
+router.post("/delete-member", async (req, res) => {
+  try {
+    const id = req.body.id;
+    await DeleteMember(id);
+    res.json({message:"Member deleted successfully", status: 200});
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete member', status: 500 });
+  }
 });
+
+router.post("/add-insurance", upload.single("image"), async (req, res) => {
+  try {
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
+
+    const { name } = req.body;
+
+    const newInsurance = await CreateInsurance({
+      name,
+      file: req.file, // 🔥 pass multer file
+    });
+    res.json({ message: "Insurance added successfully", status: 200 });
+  } catch (error) {
+    console.error("Error adding insurance:", error);
+    res.status(500).json({ message: "Error uploading" });
+  }
+});
+
 router.get("/get-insurances", async (req, res) => {
   let result = await GetInsurances();
   res.json(result);
 });
-router.delete("/delete-insurance/:id", async (req, res) => {
-  const id = req.params.id;
-  let result = await DeleteInsurance(id);
-  res.json(result);
+
+router.post("/delete-insurance", async (req, res) => {
+  const id = req.body.id;
+  try {
+    let result = await DeleteInsurance(id);
+    if(result){
+      res.json({message:"Insurance deleted successfully", status: 200});
+    }
+  } catch (error) {
+    console.error('Error deleting insurance:', error);
+    res.status(500).json({ message: 'Internal server error', status: 500 });
+  }
 });
+
 module.exports = router;
