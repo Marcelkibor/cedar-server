@@ -1,10 +1,7 @@
 const Team = require('../Models/Team');
-const CreateMember = async (data) => {
+const CreateMember = async ({ name, title, description,file }) => {
     try {
-        const name = data.name;
-        const image = data.image;
-        const title = data.title;
-        const description = data.description;   
+        const image = file ? file.path : null;
         const newMember = await Team.create({
             name,
             image,
@@ -16,20 +13,7 @@ const CreateMember = async (data) => {
         throw error;
     }
 };
-const UpdateMember = async (id, data) => {
-    try {
-        const member = await Team.findById(id);
-        if (!member) {
-            throw new Error('Member not found');
-        }
-        const updatedMember = await Team.update(data, {
-            where: { id }
-        });
-        return updatedMember;
-    } catch (error) {
-        throw error;
-    }
-};
+
 const GetMembers = async () => {
     try {
         const members = await Team.findAll();
@@ -56,7 +40,6 @@ const DeleteMember = async (id) => {
 };
 module.exports = {
     CreateMember,
-    UpdateMember,
     DeleteMember,
     GetMembers
 };

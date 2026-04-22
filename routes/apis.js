@@ -27,8 +27,15 @@ router.post("/delete-service", async (req, res) => {
  return res.json({ message: result.message , status: 200 });
 });
 
-router.post("/add-member", async (req, res) => {
-  let result = await CreateMember(req.body);
+router.post("/add-member",upload.single("image"), async (req, res) => {
+  const {name,description,title} = req.body;
+
+  let result = await CreateMember({
+    name,
+    description,
+    title,
+    file:req.file, // 🔥 pass multer file
+  });
   if(result){
     res.json({ message: 'Member added successfully', status: 200 });
   }
@@ -54,12 +61,9 @@ router.post("/delete-member", async (req, res) => {
 
 router.post("/add-insurance", upload.single("image"), async (req, res) => {
   try {
-    console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
-
     const { name } = req.body;
 
-    const newInsurance = await CreateInsurance({
+    await CreateInsurance({
       name,
       file: req.file, // 🔥 pass multer file
     });
