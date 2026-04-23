@@ -45,8 +45,13 @@ router.post("/add-member",upload.single("image"), async (req, res) => {
 });
 
 router.get("/get-members", async (req, res) => {
-  let result = await GetMembers();
-  res.json(result);
+  try {
+    const result = await GetMembers();
+    res.json(result);
+  } catch (error) {
+    console.error('Error fetching members:', error);
+    res.status(500).json({ message: 'Internal server error', status: 500 });
+  }
 });
 
 router.post("/delete-member", async (req, res) => {

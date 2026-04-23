@@ -17,7 +17,13 @@ const CreateMember = async ({ name, title, description,file }) => {
 const GetMembers = async () => {
     try {
         const members = await Team.findAll();
-        return members;
+          const formatted = members.map((m) => ({
+      ...m.toJSON(),
+      image: m.image
+    ? `http://localhost:5000/${m.image.replace(/\\/g, "/")}`
+        : null,
+    }));
+        return formatted;
     } catch (error) {
         throw error;
     }
