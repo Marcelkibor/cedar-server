@@ -28,7 +28,13 @@ const DeleteInsurance = async (id) => {
 const GetInsurances = async () => {
     try {
         const insurances = await Insurance.findAll();
-        return insurances;
+        const formatted = insurances.map((i) => ({
+            ...i.toJSON(),
+            image: i.image
+            ? `http://localhost:5000/${i.image.replace(/\\/g, "/")}`
+            : null,
+        }));
+        return formatted;
     } catch (error) {
         throw error;
     }

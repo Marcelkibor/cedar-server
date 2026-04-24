@@ -16,7 +16,6 @@ try {
 
 router.get("/get-services", async (req, res) => {
   let result = await GetServices();
-  console.log('services', result);
   res.json(result);
 });
 
