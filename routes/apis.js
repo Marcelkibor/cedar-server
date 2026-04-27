@@ -4,6 +4,7 @@ const { CreateService,GetServices, DeleteService} = require("../Services/ManageS
 const { CreateMember, GetMembers, DeleteMember} = require("../Team/ManageTeam");
 const {CreateInsurance, DeleteInsurance, GetInsurances} = require("../Insurance/ManageInsurance");
 const {upload} = require("../middleware/upload");
+const util = require("util");
 router.post("/add-service", async (req, res) => {
 try {
   let result = await CreateService(req.body);
@@ -63,19 +64,25 @@ router.post("/delete-member", async (req, res) => {
   }
 });
 
-router.post("/add-insurance", upload.single("image"), async (req, res) => {
-  try {
-    const { name } = req.body;
-
-    await CreateInsurance({
-      name,
-      file: req.file, // 🔥 pass multer file
+router.post("/add-insurance",upload.single("image"), async (req, res) => {
+try {
+    console.log("BODY:", util.inspect(req.body, { depth: null, colors: true }));
+    console.log("FILE:", util.inspect(req.file, { depth: null, colors: true }));
+    const result = await CreateInsurance({
+        name: req.body.name,
+        file: req.file,
     });
-    res.json({ message: "Insurance added successfully", status: 200 });
-  } catch (error) {
-    console.error("Error adding insurance:", error);
-    res.status(500).json({ message: "Error uploading" });
-  }
+    // console.log("result:", result);
+    if (result) {
+        res.json({ message: 'Insurance added successfully', status: 200 });
+    } else {
+        res.json({ message: 'Failed to add insurance', status: 500 });
+    }
+} catch (error) {
+    console.error('Error processing request:', error);
+    res.status(500).json({ message: 'Internal server error', status: 500 });
+}
+
 });
 
 router.get("/get-insurances", async (req, res) => {

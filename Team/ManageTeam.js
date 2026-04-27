@@ -1,10 +1,15 @@
 const Team = require('../Models/Team');
+const cloudinary = require("../config/cloudinary");
 const CreateMember = async ({ name, title, description,file }) => {
     try {
         const image = file ? file.path : null;
+            const result = await cloudinary.uploader.upload(file.path, {
+              folder: "uploads",
+            });
+            const imageUrl = result.secure_url;
         const newMember = await Team.create({
             name,
-            image,
+            image: imageUrl,
             title,
             description
         });
@@ -19,9 +24,7 @@ const GetMembers = async () => {
         const members = await Team.findAll();
           const formatted = members.map((m) => ({
       ...m.toJSON(),
-      image: m.image
-    ? `http://localhost:5000/${m.image.replace(/\\/g, "/")}`
-        : null,
+      image: m.image || null,
     }));
         return formatted;
     } catch (error) {

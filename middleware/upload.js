@@ -1,23 +1,20 @@
 import multer from "multer";
 import path from "path";
 
-// storage config
+// storage (local disk)
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); // folder where files go
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
-    const uniqueName =
-      Date.now() + "-" + Math.round(Math.random() * 1e9);
-
-    const ext = path.extname(file.originalname);
-    cb(null, uniqueName + ext);
+    const uniqueName = Date.now() + path.extname(file.originalname);
+    cb(null, uniqueName);
   },
 });
 
-// optional: filter only images
+// ✅ FIXED fileFilter (with cb)
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith("image/")) {
+  if (file.mimetype && file.mimetype.startsWith("image/")) {
     cb(null, true);
   } else {
     cb(new Error("Only images are allowed"), false);

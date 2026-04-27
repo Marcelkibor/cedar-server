@@ -10,12 +10,14 @@
   "dependencies": {
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.1",
+    "cloudinary": "^1.41.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "joi": "^18.0.2",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.1.1",
+    "multer-storage-cloudinary": "^4.0.0",
     "nodemon": "^3.1.11",
     "pg": "^8.16.3",
     "sequelize": "^6.37.7"

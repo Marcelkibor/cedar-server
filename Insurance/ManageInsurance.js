@@ -1,15 +1,21 @@
 const Insurance  = require('../Models/Insurance');
+const cloudinary = require("../config/cloudinary");
 const CreateInsurance = async ({ name, file }) => {
   try {
     const image = file ? file.path : null;
-
+    console.log("Creating insurance with:", { name, image });
+    const result = await cloudinary.uploader.upload(file.path, {
+      folder: "uploads",
+    });
+    const imageUrl = result.secure_url;
     const newInsurance = await Insurance.create({
       name,
-      image,
+      image: imageUrl,
     });
-
     return newInsurance;
+
   } catch (error) {
+    console.log("Error creating insurance:", error);
     throw error;
   }
 };
@@ -28,12 +34,10 @@ const DeleteInsurance = async (id) => {
 const GetInsurances = async () => {
     try {
         const insurances = await Insurance.findAll();
-        const formatted = insurances.map((i) => ({
-            ...i.toJSON(),
-            image: i.image
-            ? `http://localhost:5000/${i.image.replace(/\\/g, "/")}`
-            : null,
-        }));
+     const formatted = insurances.map((i) => ({
+      ...i.toJSON(),
+      image: i.image || null,
+    }));
         return formatted;
     } catch (error) {
         throw error;
